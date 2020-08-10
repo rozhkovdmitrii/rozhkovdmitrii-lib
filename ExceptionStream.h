@@ -1,7 +1,7 @@
 #ifndef RDExceptionStreamH
 #define RDExceptionStreamH
 //----------------------------------------------------------------------------------------------------------------------
-#define THROW(ex_type) throw rozhkovdmitrii::ExceptionStream<ex_type>()
+#define RD_THROW(ex_type) throw rozhkovdmitrii::ExceptionStream<ex_type>()
 //----------------------------------------------------------------------------------------------------------------------
 #include <sstream>
 //----------------------------------------------------------------------------------------------------------------------
