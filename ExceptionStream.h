@@ -1,25 +1,27 @@
 #ifndef RDExceptionStreamH
 #define RDExceptionStreamH
 //----------------------------------------------------------------------------------------------------------------------
-#define RD_THROW(ex_type) throw ExceptionStream<ex_type>()
+#define THROW(ex_type) throw rozhkovdmitrii::ExceptionStream<ex_type>()
 //----------------------------------------------------------------------------------------------------------------------
 #include <sstream>
 //----------------------------------------------------------------------------------------------------------------------
-template <typename ExceptionT>
+namespace rozhkovdmitrii
+{
+template<typename ExceptionT>
 class ExceptionStream : public ExceptionT
 {
 public:
   ExceptionStream() :
     ExceptionT("")
   {}
-
+  
   ExceptionStream(const ExceptionStream & rhs) :
     ExceptionT(rhs._oss.str())
   {
     _oss << rhs._oss.rdbuf();
   }
-
-  ExceptionStream & operator =(const ExceptionStream & rhs)
+  
+  ExceptionStream & operator=(const ExceptionStream & rhs)
   {
     if (this == &rhs)
       return *this;
@@ -27,10 +29,11 @@ public:
     ExceptionT::operator=(ExceptionT(_oss.str()));
     return *this;
   }
-
-  virtual ~ExceptionStream() {}
-
-  template <typename T>
+  
+  virtual ~ExceptionStream()
+  {}
+  
+  template<typename T>
   ExceptionStream & operator<<(const T & value)
   {
     _oss << value;
@@ -40,6 +43,8 @@ public:
 private:
   std::stringstream _oss;
 };
+//----------------------------------------------------------------------------------------------------------------------
+}
 //----------------------------------------------------------------------------------------------------------------------
 #endif //RDExceptionStreamH
 //----------------------------------------------------------------------------------------------------------------------

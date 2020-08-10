@@ -5,18 +5,26 @@
 #include <sstream>
 #include <iostream>
 //----------------------------------------------------------------------------------------------------------------------
-class Log {
+namespace rozhkovdmitrii
+{
+class Log
+{
 public:
-  enum class Type {
+  enum class Type
+  {
     DBGERR,
     DBGINF,
     APPERR,
     APPINF
   };
-
-  Log(Type type) : _type(type) {};
-  ~Log() {
-    switch (_type) {
+  
+  Log(Type type) : _type(type)
+  {};
+  
+  ~Log()
+  {
+    switch (_type)
+    {
     case Type::DBGERR:
       if (_isDbgErrEnabled) std::cerr << "DBGERR: " << _oss.str() << std::endl;
       break;
@@ -28,12 +36,14 @@ public:
       break;
     case Type::DBGINF:
       if (_isDbgInfEnabled) std::cout << "DBGINF: " << _oss.str() << std::endl;
-
+      
     }
   }
-
-  static void setEnabled(Type type, bool enabled) {
-    switch (type) {
+  
+  static void setEnabled(Type type, bool enabled)
+  {
+    switch (type)
+    {
     case Type::DBGERR:
       _isDbgErrEnabled = enabled;
       break;
@@ -48,14 +58,16 @@ public:
       break;
     }
   }
-
-  template <typename T>
-  Log & operator<<(const T & value) {
+  
+  template<typename T>
+  Log & operator<<(const T & value)
+  {
     _oss << value;
     return *this;
   }
-
-  operator bool() const {
+  
+  operator bool() const
+  {
     return false;
   }
 
@@ -64,12 +76,13 @@ private:
   static bool _isDbgErrEnabled;
   static bool _isAppInfEnabled;
   static bool _isDbgInfEnabled;
-
+  
   Type _type;
   std::ostringstream _oss;
 };
 //----------------------------------------------------------------------------------------------------------------------
 #define LOG(TYPE) Log(Log::Type::TYPE)
 //----------------------------------------------------------------------------------------------------------------------
+}
 #endif //LogH
 //----------------------------------------------------------------------------------------------------------------------
