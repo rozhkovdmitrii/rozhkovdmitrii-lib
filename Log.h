@@ -1,0 +1,75 @@
+//----------------------------------------------------------------------------------------------------------------------
+#ifndef LogH
+#define LogH
+//----------------------------------------------------------------------------------------------------------------------
+#include <sstream>
+#include <iostream>
+//----------------------------------------------------------------------------------------------------------------------
+class Log {
+public:
+  enum class Type {
+    DBGERR,
+    DBGINF,
+    APPERR,
+    APPINF
+  };
+
+  Log(Type type) : _type(type) {};
+  ~Log() {
+    switch (_type) {
+    case Type::DBGERR:
+      if (_isDbgErrEnabled) std::cerr << "DBGERR: " << _oss.str() << std::endl;
+      break;
+    case Type::APPERR:
+      if (_isAppErrEnabled) std::cerr << "APPERR: " << _oss.str() << std::endl;
+      break;
+    case Type::APPINF:
+      if (_isAppInfEnabled) std::cout << "APPINF: " << _oss.str() << std::endl;
+      break;
+    case Type::DBGINF:
+      if (_isDbgInfEnabled) std::cout << "DBGINF: " << _oss.str() << std::endl;
+
+    }
+  }
+
+  static void setEnabled(Type type, bool enabled) {
+    switch (type) {
+    case Type::DBGERR:
+      _isDbgErrEnabled = enabled;
+      break;
+    case Type::APPERR:
+      _isAppErrEnabled = enabled;
+      break;
+    case Type::APPINF:
+      _isAppInfEnabled = enabled;
+      break;
+    case Type::DBGINF:
+      _isDbgInfEnabled = enabled;
+      break;
+    }
+  }
+
+  template <typename T>
+  Log & operator<<(const T & value) {
+    _oss << value;
+    return *this;
+  }
+
+  operator bool() const {
+    return false;
+  }
+
+private:
+  static bool _isAppErrEnabled;
+  static bool _isDbgErrEnabled;
+  static bool _isAppInfEnabled;
+  static bool _isDbgInfEnabled;
+
+  Type _type;
+  std::ostringstream _oss;
+};
+//----------------------------------------------------------------------------------------------------------------------
+#define LOG(TYPE) Log(Log::Type::TYPE)
+//----------------------------------------------------------------------------------------------------------------------
+#endif //LogH
+//----------------------------------------------------------------------------------------------------------------------
