@@ -4,9 +4,10 @@
 namespace rozhkovdmitrii
 {
 //----------------------------------------------------------------------------------------------------------------------
-bool Log::_isAppErrEnabled = true;
-bool Log::_isAppInfEnabled = true;
-bool Log::_isDbgErrEnabled = false;
-bool Log::_isDbgInfEnabled = false;
+bool Log::_isINFEnabled = true;
+bool Log::_isWRNEnabled = true;
+bool Log::_isDBGEnabled = true;
+bool Log::_isERREnabled = true;
+bool Log::_isPrefixPrintEnabled = false;
 }
 //----------------------------------------------------------------------------------------------------------------------

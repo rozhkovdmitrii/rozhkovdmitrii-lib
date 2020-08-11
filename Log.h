@@ -12,10 +12,10 @@ class Log
 public:
   enum class Type
   {
-    DBGERR,
-    DBGINF,
-    APPERR,
-    APPINF
+    DBG,
+    INF,
+    WRN,
+    ERR,
   };
   
   Log(Type type) : _type(type)
@@ -25,18 +25,19 @@ public:
   {
     switch (_type)
     {
-    case Type::DBGERR:
-      if (_isDbgErrEnabled) std::cerr << "DBGERR: " << _oss.str() << std::endl;
+#define CASE(TYPE)                         \
+    case Type::TYPE:                       \
+      if (!_is##TYPE##Enabled)             \
+      break;                               \
+      if (_isPrefixPrintEnabled)           \
+        std::cout << "##TYPE##: ";         \
+      std::cout << _oss.str() << std::endl;\
       break;
-    case Type::APPERR:
-      if (_isAppErrEnabled) std::cerr << "APPERR: " << _oss.str() << std::endl;
-      break;
-    case Type::APPINF:
-      if (_isAppInfEnabled) std::cout << "APPINF: " << _oss.str() << std::endl;
-      break;
-    case Type::DBGINF:
-      if (_isDbgInfEnabled) std::cout << "DBGINF: " << _oss.str() << std::endl;
-      
+    CASE(DBG)
+    CASE(INF)
+    CASE(WRN)
+    CASE(ERR)
+#undef CASE
     }
   }
   
@@ -44,17 +45,17 @@ public:
   {
     switch (type)
     {
-    case Type::DBGERR:
-      _isDbgErrEnabled = enabled;
+    case Type::DBG:
+      _isDBGEnabled = enabled;
       break;
-    case Type::APPERR:
-      _isAppErrEnabled = enabled;
+    case Type::INF:
+      _isINFEnabled = enabled;
       break;
-    case Type::APPINF:
-      _isAppInfEnabled = enabled;
+    case Type::WRN:
+      _isWRNEnabled = enabled;
       break;
-    case Type::DBGINF:
-      _isDbgInfEnabled = enabled;
+    case Type::ERR:
+      _isERREnabled = enabled;
       break;
     }
   }
@@ -65,24 +66,26 @@ public:
     _oss << value;
     return *this;
   }
-  
-  operator bool() const
-  {
-    return false;
-  }
 
+  void static enablePrefixPrinting()
+  {
+    _isPrefixPrintEnabled = true;
+  };
+  
 private:
-  static bool _isAppErrEnabled;
-  static bool _isDbgErrEnabled;
-  static bool _isAppInfEnabled;
-  static bool _isDbgInfEnabled;
+  static bool _isINFEnabled;
+  static bool _isDBGEnabled;
+  static bool _isWRNEnabled;
+  static bool _isERREnabled;
+  static bool _isPrefixPrintEnabled;
   
   Type _type;
   std::ostringstream _oss;
 };
 //----------------------------------------------------------------------------------------------------------------------
-#define LOG(TYPE) Log(Log::Type::TYPE)
-//----------------------------------------------------------------------------------------------------------------------
 }
+//----------------------------------------------------------------------------------------------------------------------
+#define RD_LOG(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE)
+//----------------------------------------------------------------------------------------------------------------------
 #endif //RDLogH
 //----------------------------------------------------------------------------------------------------------------------
