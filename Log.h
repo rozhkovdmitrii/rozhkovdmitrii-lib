@@ -1,6 +1,6 @@
 //----------------------------------------------------------------------------------------------------------------------
-#ifndef RDLogH
-#define RDLogH
+#ifndef LogH
+#define LogH
 //----------------------------------------------------------------------------------------------------------------------
 #include <sstream>
 #include <iostream>
@@ -8,13 +8,12 @@
 //----------------------------------------------------------------------------------------------------------------------
 namespace rozhkovdmitrii
 {
-
 class LoggedObject
 {
 public:
   LoggedObject(const std::string_view & loggedObjectName) : _loggedObjectName(loggedObjectName) {};
 protected:
-  const std::string_view & _loggedObjectName;
+  const std::string _loggedObjectName;
 };
 
 class Log
@@ -105,5 +104,5 @@ private:
 //----------------------------------------------------------------------------------------------------------------------
 #define TRACE(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE, _loggedObjectName)
 //----------------------------------------------------------------------------------------------------------------------
-#endif //RDLogH
+#endif //LogH
 //----------------------------------------------------------------------------------------------------------------------

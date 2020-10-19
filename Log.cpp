@@ -82,8 +82,8 @@ Log::~Log() {
         break;                                                                               \
       std::cout << TYPE##_ForegroundColor;                                                   \
       if (_isPrefixPrintEnabled)                                                             \
-        std::cout << "[" << milli << "] " << #TYPE": ";                                      \
-      std::cout << std::setw(10) << std::setfill(' ') << _loggedObjectName << ": " << " "    \
+        std::cout << "[" << milli << "]" << '\t' << #TYPE << '\t';                                  \
+      std::cout << std::setw(20) << std::setfill(' ') << _loggedObjectName << '\t'           \
                 << _oss.str() << RST_ForegroundColor << std::endl;                           \
       break;
   CASE(ERR)
