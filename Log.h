@@ -12,42 +12,21 @@ class Log
 public:
   enum class Type
   {
-    DBG,
-    INF,
-    WRN,
-    ERR,
+      INF,
+      WRN,
+      ERR,
+      DBG,
+      TRC
   };
   
   Log(Type type) : _type(type)
   {};
   
-  ~Log()
-  {
-    switch (_type)
-    {
-#define CASE(TYPE)                         \
-    case Type::TYPE:                       \
-      if (!_is##TYPE##Enabled)             \
-      break;                               \
-      if (_isPrefixPrintEnabled)           \
-        std::cout << "##TYPE##: ";         \
-      std::cout << _oss.str() << std::endl;\
-      break;
-    CASE(DBG)
-    CASE(INF)
-    CASE(WRN)
-    CASE(ERR)
-#undef CASE
-    }
-  }
-  
+  ~Log();
+
   static void setEnabled(Type type, bool enabled)
   {
-    switch (type)
-    {
-    case Type::DBG:
-      _isDBGEnabled = enabled;
-      break;
+    switch (type) {
     case Type::INF:
       _isINFEnabled = enabled;
       break;
@@ -57,12 +36,30 @@ public:
     case Type::ERR:
       _isERREnabled = enabled;
       break;
+    case Type::DBG:
+      _isDBGEnabled = enabled;
+      break;
+    case Type::TRC:
+      _isTRCEnabled = enabled;
+      break;
     }
   }
   
   template<typename T>
   Log & operator<<(const T & value)
   {
+    switch (_type) {
+#define CASE(TYPE)                                                                               \
+        case Type::TYPE:                                                                         \
+          if (!_is##TYPE##Enabled)                                                               \
+            return *this;
+    CASE(ERR)
+    CASE(DBG)
+    CASE(INF)
+    CASE(WRN)
+    CASE(TRC)
+#undef CASE
+    }
     _oss << value;
     return *this;
   }
@@ -74,10 +71,19 @@ public:
   
 private:
   static bool _isINFEnabled;
-  static bool _isDBGEnabled;
   static bool _isWRNEnabled;
   static bool _isERREnabled;
+  static bool _isDBGEnabled;
+  static bool _isTRCEnabled;
   static bool _isPrefixPrintEnabled;
+  
+  static const std::string RST_ForegroundColor;
+  
+  static const std::string ERR_ForegroundColor;
+  static const std::string INF_ForegroundColor;
+  static const std::string WRN_ForegroundColor;
+  static const std::string DBG_ForegroundColor;
+  static const std::string TRC_ForegroundColor;
   
   Type _type;
   std::ostringstream _oss;
@@ -85,7 +91,7 @@ private:
 //----------------------------------------------------------------------------------------------------------------------
 }
 //----------------------------------------------------------------------------------------------------------------------
-#define RD_LOG(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE)
+#define TRACE(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE)
 //----------------------------------------------------------------------------------------------------------------------
 #endif //RDLogH
 //----------------------------------------------------------------------------------------------------------------------
