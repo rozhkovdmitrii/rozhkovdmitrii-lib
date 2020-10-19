@@ -4,9 +4,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 #include <sstream>
 #include <iostream>
+#include <string_view>
 //----------------------------------------------------------------------------------------------------------------------
 namespace rozhkovdmitrii
 {
+
+class LoggedObject
+{
+public:
+  LoggedObject(const std::string_view & loggedObjectName) : _loggedObjectName(loggedObjectName) {};
+protected:
+  const std::string_view & _loggedObjectName;
+};
+
 class Log
 {
 public:
@@ -19,7 +29,7 @@ public:
       TRC
   };
   
-  Log(Type type) : _type(type)
+  Log(Type type, const std::string_view & loggedObjectName) : _type(type), _loggedObjectName(loggedObjectName)
   {};
   
   ~Log();
@@ -52,7 +62,8 @@ public:
 #define CASE(TYPE)                                                                               \
         case Type::TYPE:                                                                         \
           if (!_is##TYPE##Enabled)                                                               \
-            return *this;
+            return *this;                                                                        \
+          break;
     CASE(ERR)
     CASE(DBG)
     CASE(INF)
@@ -86,12 +97,13 @@ private:
   static const std::string TRC_ForegroundColor;
   
   Type _type;
+  const std::string_view & _loggedObjectName;
   std::ostringstream _oss;
 };
 //----------------------------------------------------------------------------------------------------------------------
 }
 //----------------------------------------------------------------------------------------------------------------------
-#define TRACE(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE)
+#define TRACE(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE, _loggedObjectName)
 //----------------------------------------------------------------------------------------------------------------------
 #endif //RDLogH
 //----------------------------------------------------------------------------------------------------------------------
