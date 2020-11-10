@@ -6,8 +6,6 @@
 #include <iostream>
 #include <string_view>
 //----------------------------------------------------------------------------------------------------------------------
-namespace rozhkovdmitrii
-{
 class LoggedObject
 {
 public:
@@ -15,7 +13,7 @@ public:
 protected:
   const std::string _loggedObjectName;
 };
-
+//----------------------------------------------------------------------------------------------------------------------
 class Log
 {
 public:
@@ -25,7 +23,8 @@ public:
       WRN,
       ERR,
       DBG,
-      TRC
+      TRC,
+      DAT
   };
   
   Log(Type type, const std::string_view & loggedObjectName) : _type(type), _loggedObjectName(loggedObjectName)
@@ -51,6 +50,9 @@ public:
     case Type::TRC:
       _isTRCEnabled = enabled;
       break;
+    case Type::DAT:
+      _isDATEnabled = enabled;
+      break;
     }
   }
   
@@ -68,6 +70,7 @@ public:
     CASE(INF)
     CASE(WRN)
     CASE(TRC)
+    CASE(DAT)
 #undef CASE
     }
     _oss << value;
@@ -85,6 +88,7 @@ private:
   static bool _isERREnabled;
   static bool _isDBGEnabled;
   static bool _isTRCEnabled;
+  static bool _isDATEnabled;
   static bool _isPrefixPrintEnabled;
   
   static const std::string RST_ForegroundColor;
@@ -94,15 +98,14 @@ private:
   static const std::string WRN_ForegroundColor;
   static const std::string DBG_ForegroundColor;
   static const std::string TRC_ForegroundColor;
+  static const std::string DAT_ForegroundColor;
   
   Type _type;
   const std::string_view & _loggedObjectName;
   std::ostringstream _oss;
 };
 //----------------------------------------------------------------------------------------------------------------------
-}
-//----------------------------------------------------------------------------------------------------------------------
-#define TRACE(TYPE) rozhkovdmitrii::Log(rozhkovdmitrii::Log::Type::TYPE, _loggedObjectName)
+#define TRACE(TYPE) Log(Log::Type::TYPE, _loggedObjectName)
 //----------------------------------------------------------------------------------------------------------------------
 #endif //LogH
 //----------------------------------------------------------------------------------------------------------------------

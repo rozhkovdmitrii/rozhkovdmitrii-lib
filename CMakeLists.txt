@@ -6,7 +6,8 @@ set(CMAKE_CXX_STANDARD 17)
 add_library(rozhkovdmitrii-lib
   Log.cpp
   Log.h
-
+  LogCfg.h
+  LogCfg.cpp
   ExceptionStream.h
 )
 

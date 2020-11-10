@@ -5,20 +5,19 @@
 //----------------------------------------------------------------------------------------------------------------------
 #include "Log.h"
 //----------------------------------------------------------------------------------------------------------------------
-
-
 namespace
 {
+//----------------------------------------------------------------------------------------------------------------------
 template<std::size_t V, std::size_t C = 0, typename std::enable_if<(V < 10), int>::type = 0>
 constexpr std::size_t log10() {
   return C;
 }
-
+//----------------------------------------------------------------------------------------------------------------------
 template<std::size_t V, std::size_t C = 0, typename std::enable_if<(V >= 10), int>::type = 0>
 constexpr std::size_t log10() {
   return log10<V / 10, C + 1>();
 }
-
+//----------------------------------------------------------------------------------------------------------------------
 template<class Precision = std::chrono::seconds, class Clock = std::chrono::system_clock>
 class log_watch
 {
@@ -38,7 +37,7 @@ public:
 private:
   std::string m_format;
 };
-
+//----------------------------------------------------------------------------------------------------------------------
 template<class Precision, class Clock>
 std::ostream& operator<<(std::ostream& os, const log_watch<Precision, Clock>& lw) {
   auto time_point = Clock::now();
@@ -53,26 +52,24 @@ std::ostream& operator<<(std::ostream& os, const log_watch<Precision, Clock>& lw
   return os;
 }
 }
-
-
-namespace rozhkovdmitrii
-{
 //----------------------------------------------------------------------------------------------------------------------
 bool Log::_isINFEnabled = true;
 bool Log::_isWRNEnabled = true;
 bool Log::_isERREnabled = true;
 bool Log::_isDBGEnabled = false;
 bool Log::_isTRCEnabled = false;
+bool Log::_isDATEnabled = false;
 bool Log::_isPrefixPrintEnabled = true;
-
+//----------------------------------------------------------------------------------------------------------------------
 const std::string Log::ERR_ForegroundColor = "\x1B[31m";
 const std::string Log::INF_ForegroundColor = "\x1B[32m";
 const std::string Log::WRN_ForegroundColor = "\x1B[33m";
 const std::string Log::DBG_ForegroundColor = "\x1B[37m";
 const std::string Log::TRC_ForegroundColor = "\x1B[37m";
-
+const std::string Log::DAT_ForegroundColor = "\x1B[37m";
+//----------------------------------------------------------------------------------------------------------------------
 const std::string Log::RST_ForegroundColor = "\x1B[0m";
-
+//----------------------------------------------------------------------------------------------------------------------
 Log::~Log() {
   ::log_watch<std::chrono::milliseconds , std::chrono::high_resolution_clock> milli("%D %T.");
   switch (_type) {
@@ -91,8 +88,8 @@ Log::~Log() {
   CASE(WRN)
   CASE(DBG)
   CASE(TRC)
+  CASE(DAT)
 #undef CASE
   }
-}
 }
 //----------------------------------------------------------------------------------------------------------------------
